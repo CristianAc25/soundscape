@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">SoundScape</string>
+
+    <string name="error">Oooops!! "Something's wrong. Something's amiss!"</string>
+    <string name="loading">Loading</string>
+    <string name="icon_close">Close icon</string>
+    <string name="icon_search">Search icon</string>
+    <string name="search">Search</string>
+    <string name="icon_history">History icon</string>
+    <string name="album_cover">Album cover</string>
+    <string name="album_cover_image">Album Cover Image</string>
+    <string name="track_list">track List:</string>
+</resources>
