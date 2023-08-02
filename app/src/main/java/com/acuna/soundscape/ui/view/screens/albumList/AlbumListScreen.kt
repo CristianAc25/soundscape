@@ -40,7 +40,7 @@ fun AlbumListScreen(
             onQueryChange = { text = it },
             onSearch = {
                 items.add(text)
-                albumListViewModel.getAlbumsBySearchQuery(text)
+                albumListViewModel.setEvent(Event.searchAlbumsByQuery(text))
                 active = false
                 text = ""
             },
@@ -67,7 +67,7 @@ fun AlbumListScreen(
                 Row(modifier = Modifier
                     .padding(16.dp)
                     .clickable {
-                        albumListViewModel.getAlbumsBySearchQuery(it)
+                        albumListViewModel.setEvent(Event.searchAlbumsByQuery(it))
                         active = false
                     }
                 ) {
@@ -81,7 +81,7 @@ fun AlbumListScreen(
             }
         }
     }) { paddingValue ->
-        Box(modifier = Modifier.padding(paddingValue)) {
+        Box(modifier = Modifier.padding(paddingValue).padding(top = 18.dp)) {
             MainContent(viewState, onClick)
         }
     }

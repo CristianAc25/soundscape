@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.acuna.soundscape.R
 import com.acuna.soundscape.domain.model.AlbumUiModel
+import com.acuna.soundscape.ui.view.widgets.ColoredPill
 
 @Composable
 fun AlbumList(
@@ -52,12 +53,14 @@ fun AlbumItem(
         .padding(5.dp)
         .fillMaxWidth()
         .clickable { onClick(id) }) {
-        Row(modifier = Modifier.padding(12.dp)) {
+        Row() {
             AsyncImage(model = img, contentDescription = stringResource(R.string.album_cover))
             Column(modifier = Modifier.padding(16.dp)) {
-                Text(text = name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text(text = artist, fontSize = 12.sp)
-                Text(text = recordType, fontSize = 12.sp)
+                Text(text = name, style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Light, fontSize = 18.sp)
+                Text(text = artist, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary, fontSize = 12.sp)
+                Spacer(modifier = Modifier.height(18.dp))
+                ColoredPill(text = recordType, color = MaterialTheme.colorScheme.onBackground)
             }
         }
     }

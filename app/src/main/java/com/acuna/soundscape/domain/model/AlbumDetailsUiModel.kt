@@ -11,8 +11,10 @@ data class AlbumDetailsUiModel(
     val title: String,
     val artist: String,
     val recordType: String,
-    val img: String,
+    val albumCoverUrl: String,
+    val artistImgUrl: String,
     val releaseDate: String,
+    val explicitLyrics: Boolean,
     val duration: Int,
     val genres: List<String>,
     val tracks: List<TrackUiModel>

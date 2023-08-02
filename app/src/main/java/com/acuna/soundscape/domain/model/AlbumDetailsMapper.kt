@@ -9,9 +9,11 @@ fun toUiModel(model: AlbumDetails): AlbumDetailsUiState =
             title = model.title,
             artist = model.artist.name,
             recordType = model.record_type,
-            img = model.cover_big,
+            albumCoverUrl = model.cover_big,
+            artistImgUrl = model.artist.picture_big,
             releaseDate = model.release_date,
+            explicitLyrics = model.explicit_lyrics,
             duration = model.duration,
             genres = model.genres.data.map { it.name },
-            tracks = model.tracks.data.map { TrackUiModel(it.title, it.duration, it.id) }
+            tracks = model.tracks.data.map { TrackUiModel(it.title, it.duration) }
         ))

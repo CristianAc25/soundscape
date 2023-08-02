@@ -29,7 +29,9 @@ fun NavCompose() {
                 DetailsScreen(
                     id = backStackEntry.arguments?.getString("id"),
                     viewModel = hiltViewModel()
-                )
+                ) {
+                    navController.popBackStack()
+                }
             }
         }
         

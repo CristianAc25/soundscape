@@ -1,13 +1,15 @@
 <resources>
     <string name="app_name">SoundScape</string>
 
-    <string name="error">Oooops!! "Something's wrong. Something's amiss!"</string>
-    <string name="loading">Loading</string>
+    <string name="error">Ooops! "Something's wrong. Something's amiss!"</string>
+    <string name="loading">loading</string>
     <string name="icon_close">Close icon</string>
     <string name="icon_search">Search icon</string>
-    <string name="search">Search</string>
+    <string name="search">Enter an artists or specific albums …</string>
     <string name="icon_history">History icon</string>
     <string name="album_cover">Album cover</string>
     <string name="album_cover_image">Album Cover Image</string>
-    <string name="track_list">track List:</string>
+    <string name="track_list">track list:</string>
+    <string name="explicit_label">Explicit</string>
+    <string name="back_to_list">Back to Album List</string>
 </resources>

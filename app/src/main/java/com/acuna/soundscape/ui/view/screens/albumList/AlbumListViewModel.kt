@@ -1,9 +1,9 @@
 package com.acuna.soundscape.ui.view.screens.albumList
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.acuna.soundscape.data.AlbumRepository
 import com.acuna.soundscape.domain.model.AlbumUiState
+import com.acuna.soundscape.ui.view.screens.BaseViewModel
 import com.acuna.soundscape.utils.Constants.DEFAULT_INTIAL_SEARCH
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AlbumListViewModel @Inject constructor(
     private val repository: AlbumRepository
-): ViewModel() {
+): BaseViewModel<Event>() {
 
     private val _albumListUiState: MutableStateFlow<AlbumUiState> = MutableStateFlow(AlbumUiState.Loading)
     val albumListUiState: StateFlow<AlbumUiState>
@@ -28,7 +28,13 @@ class AlbumListViewModel @Inject constructor(
         getAlbumsBySearchQuery(DEFAULT_INTIAL_SEARCH)
     }
 
-    fun getAlbumsBySearchQuery(searchQuery: String) {
+    override fun handleEvent(event: Event) {
+        when (event) {
+            is Event.searchAlbumsByQuery -> getAlbumsBySearchQuery(event.searchQuery)
+        }
+    }
+
+    private fun getAlbumsBySearchQuery(searchQuery: String) {
         viewModelScope.launch {
             if (searchQuery.isNotBlank()) {
                 _albumListUiState.value = AlbumUiState.Loading

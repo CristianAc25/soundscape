@@ -1,4 +1,4 @@
-package com.acuna.soundscape.data.remote.entities.details
+package com.acuna.soundscape.data.remote.entities.common
 
 data class Artist(
     val id: String,
@@ -8,6 +8,5 @@ data class Artist(
     val picture_medium: String,
     val picture_small: String,
     val picture_xl: String,
-    val tracklist: String,
     val type: String
 )
