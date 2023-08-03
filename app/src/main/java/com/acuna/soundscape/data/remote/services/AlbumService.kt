@@ -18,6 +18,7 @@ interface AlbumService {
     suspend fun getAlbumsBySearchQuery(
         @Query("index") index: Int = 1,
         @Query("limit") limit: Int = 20,
+        @Query("strict") strict: String = "on",
         @Query("q") searchQuery: String
     ): AlbumSearch
 

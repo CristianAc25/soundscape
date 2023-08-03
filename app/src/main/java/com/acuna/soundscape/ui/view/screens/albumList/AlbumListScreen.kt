@@ -12,15 +12,17 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.acuna.soundscape.R
-import com.acuna.soundscape.domain.model.AlbumDTO
+import com.acuna.soundscape.ui.view.widgets.ConnectivityStatus
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun AlbumListScreen(
     viewModel: AlbumListViewModel,
@@ -34,7 +36,23 @@ fun AlbumListScreen(
     var active by remember { mutableStateOf(false) }
     val items = remember { mutableStateListOf<String>() }
 
-    Scaffold (topBar = {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    Scaffold (
+        snackbarHost = {
+            // reuse default SnackbarHost to have default animation and timing handling
+            SnackbarHost(snackbarHostState) { data ->
+                // custom snackbar with the custom colors
+                Snackbar(
+                    actionColor = Color.Green,
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    contentColor = Color.White,
+                    snackbarData = data
+                )
+            }
+        },
+        topBar = {
         SearchBar(
             modifier = Modifier.fillMaxWidth(),
             query = text,
@@ -83,27 +101,16 @@ fun AlbumListScreen(
             }
         }
     }) { paddingValue ->
-        Box(modifier = Modifier.padding(paddingValue).padding(top = 18.dp)) {
+        ConnectivityStatus(scope, snackbarHostState, LocalContext.current)
+        Box(modifier = Modifier
+            .padding(paddingValue)
+            .padding(top = 18.dp)) {
             AlbumList(
                 albumList = albums,
                 onClick = onClick
             )
         }
     }
-
 }
-/*
-@Composable
-private fun MainContent(
-    uiState: AlbumUiState,
-    onClick: (id: String) -> Unit
-) {
-    when (uiState) {
-        AlbumUiState.Error -> Error()
-        AlbumUiState.Loading -> Loading()
-        is AlbumUiState.Success -> AlbumList(
-            albumList = uiState.albumUiStateModelList,
-            onClick = onClick
-        )
-    }
-}*/
+
+

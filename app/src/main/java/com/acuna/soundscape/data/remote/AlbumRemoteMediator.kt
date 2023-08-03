@@ -6,17 +6,15 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.acuna.soundscape.data.local.AlbumDatabase
+import com.acuna.soundscape.data.AlbumRepository
 import com.acuna.soundscape.data.local.entities.search.AlbumEntity
 import com.acuna.soundscape.data.mappers.toAlbumRoomEntity
-import com.acuna.soundscape.data.remote.services.AlbumService
 import retrofit2.HttpException
 import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)
 class AlbumRemoteMediator(
-    private val albumDb: AlbumDatabase,
-    private val albumApi: AlbumService,
+    private val repository: AlbumRepository,
     private val searchQuery: MutableState<String>
 ): RemoteMediator<Int, AlbumEntity>() {
 
@@ -35,23 +33,24 @@ class AlbumRemoteMediator(
                     if (lastItem == null) {
                         1
                     } else {
-                        (lastItem.id.toInt() / state.config.pageSize) + 1
+                        lastItem.id + 1
                     }
                 }
             }
 
-            val albums = albumApi.getAlbumsBySearchQuery(
+            val albums = repository.albumApi.getAlbumsBySearchQuery(
                 index = loadKey,
                 limit = state.config.pageSize,
                 searchQuery = searchQuery.value
             )
 
-            albumDb.withTransaction {
+            repository.albumsDatabase.withTransaction {
                 if(loadType == LoadType.REFRESH) {
-                    albumDb.dao.clearAll()
+                    repository.albumsDatabase.dao.clearAll()
                 }
-                val albumEntities = albums.data.map { it.toAlbumRoomEntity() }
-                albumDb.dao.upsertAll(albumEntities)
+                val albumEntities = albums.data.mapIndexed { index, album -> album
+                    .toAlbumRoomEntity(index + loadKey) }
+                repository.albumsDatabase.dao.upsertAll(albumEntities)
             }
 
             MediatorResult.Success(

@@ -3,10 +3,11 @@ package com.acuna.soundscape.data.mappers
 import com.acuna.soundscape.data.local.entities.search.AlbumEntity
 import com.acuna.soundscape.data.remote.entities.search.Album
 
-fun Album.toAlbumRoomEntity(): AlbumEntity {
+fun Album.toAlbumRoomEntity(id: Int): AlbumEntity {
     return AlbumEntity(
         id = id,
-        //artist = artist.toRoomArtistEntity(),
+        albumId = this.id,
+        artistName = artist.name,
         cover_big = cover_big,
         cover_medium = cover_medium,
         cover_small = cover_small,

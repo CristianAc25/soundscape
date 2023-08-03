@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -28,22 +29,17 @@ fun AlbumList(
 ) {
 
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
-        LazyColumn() {
+        LazyColumn {
             items(
                 count = albumList.itemCount,
-                // Here we use the new itemKey extension on LazyPagingItems to
-                // handle placeholders automatically, ensuring you only need to provide
-                // keys for real items
                 key = albumList.itemKey { it.id },
-                // Similarly, itemContentType lets you set a custom content type for each item
                 contentType = albumList.itemContentType { "contentType" }
             ) { index ->
-                // As the standard items call provides only the index, we get the item
-                // directly from our lazyPagingItems
                 val item = albumList[index]
-                if(item != null) {
+
+                if (item != null) {
                     AlbumItem(
-                        id = item.id,
+                        albumId = item.albumId,
                         name = item.title,
                         artist = item.artist,
                         recordType = item.recordType,
@@ -52,36 +48,30 @@ fun AlbumList(
                     )
                 }
             }
-
-            /*items(count = albumList.size, itemContent = { index ->
-                AlbumItem(
-                    id = albumList[index].id,
-                    name = albumList[index].title,
-                    artist = albumList[index].artist,
-                    recordType = albumList[index].recordType,
-                    img = albumList[index].img,
-                    onClick = onClick
-                )
-            })*/
         }
     }
 }
 
 @Composable
 fun AlbumItem(
-    id: String,
+    albumId: String,
     name: String,
     artist: String,
     recordType: String,
-    img: String,
+    img: String?,
     onClick: (id: String) -> Unit
 ) {
     Card(modifier = Modifier
         .padding(5.dp)
         .fillMaxWidth()
-        .clickable { onClick(id) }) {
-        Row() {
-            AsyncImage(model = img, contentDescription = stringResource(R.string.album_cover))
+        .clickable { onClick(albumId) }) {
+        Row {
+            AsyncImage(
+                modifier = Modifier.size(150.dp),
+                model = img,
+                contentDescription = stringResource(R.string.album_cover),
+                error = painterResource(id = R.drawable.ic_missing_artwork)
+            )
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(text = name, style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Light, fontSize = 18.sp)

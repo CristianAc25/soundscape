@@ -6,7 +6,6 @@ import androidx.paging.*
 import com.acuna.soundscape.data.AlbumRepository
 import com.acuna.soundscape.data.local.AlbumDatabase
 import com.acuna.soundscape.data.remote.AlbumRemoteMediator
-import com.acuna.soundscape.data.remote.services.AlbumService
 import com.acuna.soundscape.domain.model.AlbumDTO
 import com.acuna.soundscape.domain.model.toAlbumDto
 import com.acuna.soundscape.ui.view.screens.BaseViewModel
@@ -19,8 +18,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalPagingApi::class)
 @HiltViewModel
 class AlbumListViewModel @Inject constructor(
-    private val repository: AlbumRepository,
-    private val albumApi: AlbumService,
+    repository: AlbumRepository,
     private val albumsDatabase: AlbumDatabase
 ): BaseViewModel<Event>() {
 
@@ -28,16 +26,15 @@ class AlbumListViewModel @Inject constructor(
 
     var albumPagingFlow: Flow<PagingData<AlbumDTO>> = Pager(
         config = PagingConfig(
-            pageSize = 15,
+            pageSize = 20,
             prefetchDistance = 10,
-            initialLoadSize = 15,
+            initialLoadSize = 20,
         ),
         pagingSourceFactory = {
             albumsDatabase.dao.pagingSource()
         },
         remoteMediator = AlbumRemoteMediator(
-            albumsDatabase,
-            albumApi,
+            repository,
             searchQuery = query
         )
     ).flow.map { pagingData ->

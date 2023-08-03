@@ -1,6 +1,5 @@
 package com.acuna.soundscape.ui.view.screens.details
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -18,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +31,7 @@ import com.acuna.soundscape.ui.view.Error
 import com.acuna.soundscape.ui.view.Loading
 import com.acuna.soundscape.ui.view.widgets.ColoredPill
 import com.acuna.soundscape.utils.toMinutes
+import java.lang.Float.min
 
 @Composable
 fun DetailsScreen(
@@ -44,7 +43,7 @@ fun DetailsScreen(
 
     if (!id.isNullOrEmpty()) {
         LaunchedEffect(id) {
-            viewModel.setEvent(Event.getAlbumsDetailsById(id))
+            viewModel.setEvent(Event.GetAlbumsDetailsById(id))
         }
 
         when (uiState) {
@@ -67,12 +66,6 @@ fun DetailsContent(
 ) {
     val scrollState = rememberScrollState()
 
-    val maxScroll = 400.dp
-    val maxScrollPx = with(LocalDensity.current) { maxScroll.toPx() }
-    val alphaState: Float by animateFloatAsState(
-        targetValue = 1f - (scrollState.value / maxScrollPx).coerceIn(0f, 1f)
-    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -85,7 +78,10 @@ fun DetailsContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .graphicsLayer { alpha = alphaState }
+                    .graphicsLayer {
+                        alpha = min(1f, 1 - (scrollState.value / 800f))
+                        translationY = -scrollState.value * 0.6f
+                    }
             )
             AsyncImage(
                 model = albumDetailsDTO.artistImgUrl,
@@ -94,7 +90,7 @@ fun DetailsContent(
                     .size(212.dp)
                     .offset(y = 86.dp)
                     .aspectRatio(1f)
-                    .clip(androidx.compose.foundation.shape.CircleShape)
+                    .clip(CircleShape)
                     .border(8.dp, MaterialTheme.colorScheme.primary, CircleShape)
                     .align(Alignment.BottomEnd)
             )
@@ -107,19 +103,17 @@ fun DetailsContent(
                 .fillMaxSize()
                 .padding(32.dp)
         ) {
-            Row {
-                Text(
-                    text = albumDetailsDTO.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.ExtraLight
-                )
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                if (albumDetailsDTO.explicitLyrics) {
-                    ColoredPill(text = stringResource(R.string.explicit_label), Color.Red)
-                }
+            if (albumDetailsDTO.explicitLyrics) {
+                ColoredPill(text = stringResource(R.string.explicit_label), Color.Red)
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = albumDetailsDTO.title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.ExtraLight
+            )
 
             Text(
                 text = albumDetailsDTO.artist,
@@ -137,7 +131,7 @@ fun DetailsContent(
             )
 
             Text(
-                text = "duration: ${albumDetailsDTO.duration.toMinutes}",
+                text = "duration: ${albumDetailsDTO.duration.toMinutes} min",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -170,7 +164,7 @@ fun DetailsContent(
                     .fillMaxWidth()
                     .padding(vertical = 8.dp)
             ) {
-                Text(text = stringResource(R.string.back_to_list))
+                Text(text = stringResource(R.string.back_to_list), color = Color.White)
             }
         }
     }
@@ -178,7 +172,7 @@ fun DetailsContent(
 
 @Preview
 @Composable
-private fun TrackItem(index: Int = 1, track: TrackUiModel = TrackUiModel("Title", 3660)) {
+private fun TrackItem(index: Int = 1, track: TrackUiModel = TrackUiModel(stringResource(R.string.title), 3660)) {
     Column(modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -189,8 +183,7 @@ private fun TrackItem(index: Int = 1, track: TrackUiModel = TrackUiModel("Title"
             ColoredPill(text = track.duration.toMinutes)
         }
         Spacer(modifier = Modifier.height(8.dp))
-        HorizontalDivider(thickness = 0.5.dp, color = Color.Gray)
+        HorizontalDivider(thickness = 1.dp, color = Color.Gray)
     }
-
 }
 

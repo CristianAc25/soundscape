@@ -22,7 +22,7 @@ class DetailsViewModel @Inject constructor(
 
     override fun handleEvent(event: Event) {
         when (event) {
-            is Event.getAlbumsDetailsById -> getAlbumsDetailsById(event.id)
+            is Event.GetAlbumsDetailsById -> getAlbumsDetailsById(event.id)
         }
     }
 

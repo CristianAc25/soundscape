@@ -12,4 +12,7 @@
     <string name="track_list">track list:</string>
     <string name="explicit_label">Explicit</string>
     <string name="back_to_list">Back to Album List</string>
+    <string name="title">Title</string>
+    <string name="no_internet_connection">No internet connection. You are in offline mode...</string>
+    <string name="online_again">You are Online again!</string>
 </resources>
