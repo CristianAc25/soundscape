@@ -5,7 +5,7 @@
     <string name="loading">loading</string>
     <string name="icon_close">Close icon</string>
     <string name="icon_search">Search icon</string>
-    <string name="search">Enter an artists or specific albums …</string>
+    <string name="search">Enter an artist or specific album …</string>
     <string name="icon_history">History icon</string>
     <string name="album_cover">Album cover</string>
     <string name="album_cover_image">Album Cover Image</string>
@@ -13,6 +13,10 @@
     <string name="explicit_label">Explicit</string>
     <string name="back_to_list">Back to Album List</string>
     <string name="title">Title</string>
-    <string name="no_internet_connection">No internet connection. You are in offline mode...</string>
+    <string name="no_internet_connection">No internet connection. You are in offline mode…</string>
     <string name="online_again">You are Online again!</string>
+    <string name="album_duration">"duration: %1s min"</string>
+    <string name="album_genres">"genres: %1s"</string>
+    <string name="album_release">"release date: %1s"</string>
+    <string name="no_results_found">No results found</string>
 </resources>

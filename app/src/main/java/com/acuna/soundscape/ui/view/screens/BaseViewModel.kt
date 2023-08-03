@@ -34,7 +34,6 @@ abstract class BaseViewModel<Event : UiEvent> : ViewModel() {
    */
   protected abstract fun handleEvent(event: Event)
 
-
   /**
    * Set new Event
    */

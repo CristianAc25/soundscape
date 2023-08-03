@@ -12,6 +12,7 @@ import com.acuna.soundscape.nav.Destinations.Home
 import com.acuna.soundscape.ui.theme.SoundScapeTheme
 import com.acuna.soundscape.ui.view.screens.albumList.AlbumListScreen
 import com.acuna.soundscape.ui.view.screens.details.DetailsScreen
+import com.acuna.soundscape.utils.Constants.DETAILS_SCREEN_PATH_ARG
 
 @Composable
 fun NavCompose() {
@@ -27,7 +28,7 @@ fun NavCompose() {
             }
             composable(Details) { backStackEntry ->
                 DetailsScreen(
-                    id = backStackEntry.arguments?.getString("id"),
+                    id = backStackEntry.arguments?.getString(DETAILS_SCREEN_PATH_ARG),
                     viewModel = hiltViewModel()
                 ) {
                     navController.popBackStack()

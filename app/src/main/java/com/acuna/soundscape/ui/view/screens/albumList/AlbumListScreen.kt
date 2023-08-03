@@ -1,21 +1,21 @@
 package com.acuna.soundscape.ui.view.screens.albumList
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.acuna.soundscape.R
@@ -41,9 +41,7 @@ fun AlbumListScreen(
 
     Scaffold (
         snackbarHost = {
-            // reuse default SnackbarHost to have default animation and timing handling
             SnackbarHost(snackbarHostState) { data ->
-                // custom snackbar with the custom colors
                 Snackbar(
                     actionColor = Color.Green,
                     containerColor = MaterialTheme.colorScheme.secondary,
@@ -58,15 +56,18 @@ fun AlbumListScreen(
             query = text,
             onQueryChange = { text = it },
             onSearch = {
-                items.add(text)
-                albumListViewModel.setEvent(Event.SearchAlbumsByQuery(text))
-                albums.refresh()
+                if (text.isNotBlank()) {
+                    items.add(text)
+                    albumListViewModel.setEvent(Event.SearchAlbumsByQuery(text))
+                    albums.refresh()
+                }
                 active = false
                 text = ""
             },
             active = active,
             onActiveChange = { active = it },
-            placeholder = { Text(text = stringResource(R.string.search)) },
+            placeholder = { Text(text = stringResource(R.string.search),style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Light, fontSize = 18.sp) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -105,11 +106,33 @@ fun AlbumListScreen(
         Box(modifier = Modifier
             .padding(paddingValue)
             .padding(top = 18.dp)) {
-            AlbumList(
-                albumList = albums,
-                onClick = onClick
-            )
+            if (albums.itemCount > 0) {
+                AlbumList(
+                    albumList = albums,
+                    onClick = onClick
+                )
+            } else {
+                NoResultsFoundView()
+            }
+
         }
+    }
+}
+
+@Composable
+fun NoResultsFoundView() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = stringResource(R.string.no_results_found),
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.ExtraLight
+        )
     }
 }
 

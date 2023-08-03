@@ -125,19 +125,28 @@ fun DetailsContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "release date: ${albumDetailsDTO.releaseDate}",
+                text = String.format(
+                    stringResource(id = R.string.album_release),
+                    albumDetailsDTO.releaseDate
+                ),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
             Text(
-                text = "duration: ${albumDetailsDTO.duration.toMinutes} min",
+                text = String.format(
+                    stringResource(id = R.string.album_duration),
+                    albumDetailsDTO.duration.toMinutes
+                ),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
             Text(
-                text = "genres: ${albumDetailsDTO.genres.joinToString(", ")}",
+                text = String.format(
+                    stringResource(id = R.string.album_genres), albumDetailsDTO.genres
+                        .joinToString(", ")
+                ),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
@@ -172,7 +181,10 @@ fun DetailsContent(
 
 @Preview
 @Composable
-private fun TrackItem(index: Int = 1, track: TrackUiModel = TrackUiModel(stringResource(R.string.title), 3660)) {
+private fun TrackItem(
+    index: Int = 1,
+    track: TrackUiModel = TrackUiModel(stringResource(R.string.title), 3660)
+) {
     Column(modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
