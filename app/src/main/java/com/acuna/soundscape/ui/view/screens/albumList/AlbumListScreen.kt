@@ -15,19 +15,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.acuna.soundscape.R
-import com.acuna.soundscape.domain.model.AlbumUiState
-import com.acuna.soundscape.ui.view.Error
-import com.acuna.soundscape.ui.view.Loading
+import com.acuna.soundscape.domain.model.AlbumDTO
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlbumListScreen(
+    viewModel: AlbumListViewModel,
     albumListViewModel: AlbumListViewModel = hiltViewModel(),
     onClick: (id: String) -> Unit
 ) {
-    val viewState by albumListViewModel.albumListUiState.collectAsStateWithLifecycle()
+
+    val albums = viewModel.albumPagingFlow.collectAsLazyPagingItems()
 
     var text by remember { mutableStateOf("") }
     var active by remember { mutableStateOf(false) }
@@ -40,7 +41,8 @@ fun AlbumListScreen(
             onQueryChange = { text = it },
             onSearch = {
                 items.add(text)
-                albumListViewModel.setEvent(Event.searchAlbumsByQuery(text))
+                albumListViewModel.setEvent(Event.SearchAlbumsByQuery(text))
+                albums.refresh()
                 active = false
                 text = ""
             },
@@ -67,7 +69,7 @@ fun AlbumListScreen(
                 Row(modifier = Modifier
                     .padding(16.dp)
                     .clickable {
-                        albumListViewModel.setEvent(Event.searchAlbumsByQuery(it))
+                        albumListViewModel.setEvent(Event.SearchAlbumsByQuery(it))
                         active = false
                     }
                 ) {
@@ -82,12 +84,15 @@ fun AlbumListScreen(
         }
     }) { paddingValue ->
         Box(modifier = Modifier.padding(paddingValue).padding(top = 18.dp)) {
-            MainContent(viewState, onClick)
+            AlbumList(
+                albumList = albums,
+                onClick = onClick
+            )
         }
     }
 
 }
-
+/*
 @Composable
 private fun MainContent(
     uiState: AlbumUiState,
@@ -101,4 +106,4 @@ private fun MainContent(
             onClick = onClick
         )
     }
-}
+}*/

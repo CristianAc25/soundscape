@@ -15,7 +15,11 @@ import retrofit2.http.Query
 interface AlbumService {
 
     @GET("search/album")
-    suspend fun getAlbumsBySearchQuery(@Query("q") searchQuery: String): AlbumSearch
+    suspend fun getAlbumsBySearchQuery(
+        @Query("index") index: Int = 1,
+        @Query("limit") limit: Int = 20,
+        @Query("q") searchQuery: String
+    ): AlbumSearch
 
     @GET("album/{id}")
     suspend fun getAlbumDetailsById(@Path("id") id: String): AlbumDetails

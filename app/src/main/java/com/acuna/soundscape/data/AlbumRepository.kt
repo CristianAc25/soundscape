@@ -13,7 +13,7 @@ class AlbumRepository @Inject constructor(
 ) {
     fun getAlbumsBySearchQuery(searchQuery: String): Flow<AlbumUiState> = flow {
         try {
-            emit(toUiModel(albumService.getAlbumsBySearchQuery(searchQuery)))
+            emit(toUiModel(albumService.getAlbumsBySearchQuery(searchQuery = searchQuery)))
         } catch (throwable: Throwable) {
             emit(AlbumUiState.Error)
         }

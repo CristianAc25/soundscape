@@ -1,12 +1,12 @@
 package com.acuna.soundscape.domain.model
 
 sealed class AlbumDetailsUiState {
-    data class Success(val albumDetailsUiModel: AlbumDetailsUiModel) : AlbumDetailsUiState()
+    data class Success(val albumDetailsDTO: AlbumDetailsDTO) : AlbumDetailsUiState()
     object Loading : AlbumDetailsUiState()
     object Error : AlbumDetailsUiState()
 }
 
-data class AlbumDetailsUiModel(
+data class AlbumDetailsDTO(
     val id: String,
     val title: String,
     val artist: String,

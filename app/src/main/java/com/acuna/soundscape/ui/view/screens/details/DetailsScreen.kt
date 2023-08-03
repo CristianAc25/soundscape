@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.acuna.soundscape.R
-import com.acuna.soundscape.domain.model.AlbumDetailsUiModel
+import com.acuna.soundscape.domain.model.AlbumDetailsDTO
 import com.acuna.soundscape.domain.model.AlbumDetailsUiState
 import com.acuna.soundscape.domain.model.TrackUiModel
 import com.acuna.soundscape.ui.view.Error
@@ -52,7 +52,7 @@ fun DetailsScreen(
             AlbumDetailsUiState.Loading -> Loading()
             is AlbumDetailsUiState.Success -> DetailsContent(
                 (uiState as AlbumDetailsUiState
-                .Success).albumDetailsUiModel
+                .Success).albumDetailsDTO
             ) {
                 onBackAction()
             }
@@ -62,7 +62,7 @@ fun DetailsScreen(
 
 @Composable
 fun DetailsContent(
-    albumDetailsUiModel: AlbumDetailsUiModel,
+    albumDetailsDTO: AlbumDetailsDTO,
     onBackAction: () -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -80,7 +80,7 @@ fun DetailsContent(
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
             AsyncImage(
-                model = albumDetailsUiModel.albumCoverUrl,
+                model = albumDetailsDTO.albumCoverUrl,
                 contentDescription = stringResource(R.string.album_cover_image),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -88,7 +88,7 @@ fun DetailsContent(
                     .graphicsLayer { alpha = alphaState }
             )
             AsyncImage(
-                model = albumDetailsUiModel.artistImgUrl,
+                model = albumDetailsDTO.artistImgUrl,
                 contentDescription = stringResource(R.string.album_cover_image),
                 modifier = Modifier
                     .size(212.dp)
@@ -109,20 +109,20 @@ fun DetailsContent(
         ) {
             Row {
                 Text(
-                    text = albumDetailsUiModel.title,
+                    text = albumDetailsDTO.title,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.ExtraLight
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                if (albumDetailsUiModel.explicitLyrics) {
+                if (albumDetailsDTO.explicitLyrics) {
                     ColoredPill(text = stringResource(R.string.explicit_label), Color.Red)
                 }
             }
 
             Text(
-                text = albumDetailsUiModel.artist,
+                text = albumDetailsDTO.artist,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.tertiary,
                 fontWeight = FontWeight.SemiBold
@@ -131,19 +131,19 @@ fun DetailsContent(
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "release date: ${albumDetailsUiModel.releaseDate}",
+                text = "release date: ${albumDetailsDTO.releaseDate}",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
             Text(
-                text = "duration: ${albumDetailsUiModel.duration.toMinutes}",
+                text = "duration: ${albumDetailsDTO.duration.toMinutes}",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
             Text(
-                text = "genres: ${albumDetailsUiModel.genres.joinToString(", ")}",
+                text = "genres: ${albumDetailsDTO.genres.joinToString(", ")}",
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
@@ -158,7 +158,7 @@ fun DetailsContent(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
 
-            albumDetailsUiModel.tracks.forEachIndexed { index, track ->
+            albumDetailsDTO.tracks.forEachIndexed { index, track ->
                 TrackItem(index.inc(), track)
             }
 

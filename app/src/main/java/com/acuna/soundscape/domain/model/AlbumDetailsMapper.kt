@@ -4,7 +4,7 @@ import com.acuna.soundscape.data.remote.entities.details.AlbumDetails
 
 fun toUiModel(model: AlbumDetails): AlbumDetailsUiState =
     AlbumDetailsUiState.Success(
-        AlbumDetailsUiModel(
+        AlbumDetailsDTO(
             id = model.id,
             title = model.title,
             artist = model.artist.name,

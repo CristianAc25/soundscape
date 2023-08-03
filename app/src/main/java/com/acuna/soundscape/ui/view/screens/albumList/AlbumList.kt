@@ -13,20 +13,47 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import com.acuna.soundscape.R
-import com.acuna.soundscape.domain.model.AlbumUiModel
+import com.acuna.soundscape.domain.model.AlbumDTO
 import com.acuna.soundscape.ui.view.widgets.ColoredPill
 
 @Composable
 fun AlbumList(
-    albumList: List<AlbumUiModel>,
+    albumList: LazyPagingItems<AlbumDTO>,
     onClick: (id: String) -> Unit
 ) {
 
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
         LazyColumn() {
-            items(count = albumList.size, itemContent = { index ->
+            items(
+                count = albumList.itemCount,
+                // Here we use the new itemKey extension on LazyPagingItems to
+                // handle placeholders automatically, ensuring you only need to provide
+                // keys for real items
+                key = albumList.itemKey { it.id },
+                // Similarly, itemContentType lets you set a custom content type for each item
+                contentType = albumList.itemContentType { "contentType" }
+            ) { index ->
+                // As the standard items call provides only the index, we get the item
+                // directly from our lazyPagingItems
+                val item = albumList[index]
+                if(item != null) {
+                    AlbumItem(
+                        id = item.id,
+                        name = item.title,
+                        artist = item.artist,
+                        recordType = item.recordType,
+                        img = item.img,
+                        onClick = onClick
+                    )
+                }
+            }
+
+            /*items(count = albumList.size, itemContent = { index ->
                 AlbumItem(
                     id = albumList[index].id,
                     name = albumList[index].title,
@@ -35,7 +62,7 @@ fun AlbumList(
                     img = albumList[index].img,
                     onClick = onClick
                 )
-            })
+            })*/
         }
     }
 }

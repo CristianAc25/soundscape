@@ -21,7 +21,7 @@ fun NavCompose() {
     SoundScapeTheme {
         NavHost(navController = navController, startDestination = Home) {
             composable(Home) {
-                AlbumListScreen { id ->
+                AlbumListScreen(hiltViewModel()) { id ->
                     actions.details(id)
                 }
             }
